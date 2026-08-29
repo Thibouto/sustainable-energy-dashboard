@@ -4,6 +4,8 @@ Interactive dashboard on global sustainable energy indicators (electricity acces
 
 **[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/thibaut.r4710/viz/Book1_17849959495500/Dashboard1)**
 
+![Dashboard overview](images/dashboard_overview.png)
+
 ## What it covers
 
 - **Electricity Access Around the World (2000-2020)** — world map of electricity access (% of population) by country, with a year slider
