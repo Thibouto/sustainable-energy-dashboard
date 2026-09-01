@@ -1,8 +1,8 @@
-# Global Sustainable Energy Dashboard (2000-2020)
+# Global Sustainable Energy Dashboard (2000-2019)
 
-Interactive dashboard on global sustainable energy indicators (electricity access, energy mix, renewable share, CO2 emissions) across 176 countries between 2000 and 2020. This is a portfolio project built as part of a transition into data analytics, focused on data visualization rather than data cleaning (see the other portfolio projects for that).
+Interactive dashboard on global sustainable energy indicators (electricity access, energy mix, renewable share, CO2 emissions) across 176 countries, built from a dataset spanning 2000-2020 (the dashboard's own year control tops out at 2019, see Known limitations). This is a portfolio project built as part of a transition into data analytics, focused on data visualization rather than data cleaning (see the other portfolio projects for that).
 
-**[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/thibaut.r4710/viz/Book1_17849959495500/Dashboard1)**
+**[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/thibaut.r4710/viz/sustainable_energy_dashboard/Dashboard1)**
 
 ![Dashboard overview](images/dashboard_overview.png)
 
