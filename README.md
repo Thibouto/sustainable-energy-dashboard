@@ -6,12 +6,16 @@ Interactive dashboard on global sustainable energy indicators (electricity acces
 
 ![Dashboard overview](images/dashboard_overview.png)
 
+<video src="images/Recording.mov" controls width="700"></video>
+
 ## What it covers
 
-- **Electricity Access Around the World (2000-2020)** — world map of electricity access (% of population) by country, with a year slider
-- **Global Electricity Mix (2000-2020)** — fossil / nuclear / renewable electricity generation (TWh), stacked over time
-- **Renewable Share Growth: Top 10 Countries (2000-2019)** — countries with the largest gain in renewable energy share, benchmarked against the world average
-- **CO2 Emissions vs GDP per Capita** — CO2 emissions per capita against GDP per capita, one point per country, year slider synced with the map
+A single **Year Control** parameter (2000-2019) drives one slider that syncs the selected year across all four views at once.
+
+- **Electricity Access Around the World** — world map of electricity access (% of population) by country
+- **Global Electricity Mix** — fossil / nuclear / renewable electricity generation (TWh) stacked over time, with the selected year highlighted and other years greyed out
+- **Renewable Share Growth Since 2000: Top 10 Countries** — countries with the largest gain in renewable energy share between 2000 and the selected year, benchmarked against the world average
+- **CO2 Emissions vs GDP per Capita** — CO2 emissions per capita against GDP per capita for the selected year, one point per country, with statistical outliers (more than 2 standard deviations from the year's average on either axis) labeled directly on the chart
 
 ## Data
 
@@ -36,17 +40,22 @@ Also fixed: the `Density (P/Km2)` column header contained a literal line break i
 
 ## Key calculated fields
 
-- **`Renewable Share 2000` / `Renewable Share 2020`** — isolates each country's renewable energy share for a single year (`IF [Year] = 2000 THEN ... END`)
-- **`Renewable Share Change`** — uses a `{FIXED [Entity] : MAX(...)}` LOD expression to compare each country's 2000 and 2019 values on a single row, regardless of the active year filter (2019 was used instead of 2020, which has near-complete missing data for this field)
-- **`World Avg Renewable Share Change`** — a table-wide `{FIXED : AVG(...)}` LOD expression, used as a reference line so the Top 10 chart can be benchmarked against the true world average rather than the average of the 10 countries shown
+- **`Year Control`** — an integer parameter (range 2000-2019) bound to a single dashboard slider, used by all four worksheets to stay in sync
+- **`Renewable Share 2000`** — isolates each country's renewable energy share in the baseline year (`IF [Year] = 2000 THEN ... END`)
+- **`Renewable Share Selected Year`** — same idea, but for whichever year `Year Control` is set to, so the comparison updates live with the slider instead of being fixed to one year
+- **`Renewable Share Change`** — a `{FIXED [Entity] : MAX(...)}` LOD expression comparing `Renewable Share 2000` to `Renewable Share Selected Year` on a single row, regardless of the active filter
+- **`World AVG renew share change`** — a table-wide `{FIXED : AVG(...)}` LOD expression, used as a reference line so the Top 10 chart can be benchmarked against the true world average rather than the average of the 10 countries shown
+- **`Is Selected Year` / `Show Selected Year` / `Grey Mask`** — highlight the year picked by `Year Control` on the map and the electricity mix chart, greying out the other years
+- **`CO2 Z-Score` / `GDP Z-Score`** — `({FIXED [Year] : ...} - mean) / stddev` for CO2 per capita and GDP per capita, computed per year so a country's outlier status is relative to that year's distribution, not the whole 2000-2020 range
+- **`Outlier Label`** — returns the country name when `|CO2 Z-Score| > 2` or `|GDP Z-Score| > 2`, used as a text label on the scatter plot
 - **`Population (estimated)`** — `Density × Land Area`, used to derive a per-capita view (see limitation below)
 - **`CO2 per Capita`** — `Value_co2_emissions_kt_by_country × 1000 / Population (estimated)`, converting kilotonnes to tonnes per person
 
 ## Known limitations
 
 - **Estimated population.** The dataset has no direct population column, so population is approximated as `Density × Land Area`. Cross-checking against France's real population (~67.4M) shows a ~13% overestimation (76.6M), caused by a scope mismatch between the two source columns: `Land Area` appears to include overseas territories, while `Density` reflects metropolitan France only. `CO2 per Capita` and `Population (estimated)` should be read as directional, not exact.
-- **2019 used instead of 2020 for renewable share growth**, due to near-complete missing data in 2020 for that specific field.
+- **`Year Control` tops out at 2019, not 2020.** Since the same parameter now drives all four charts, and the renewable share field has near-complete missing data in 2020, the whole dashboard is capped at 2019 rather than just the Top 10 chart, even though the map and electricity mix data do extend to 2020.
 
 ## Tech stack
 
-- **Tableau Public**: data connection, calculated fields (LOD expressions), map, stacked area chart, bar chart with reference line, scatter plot, dashboard with synced filter actions
+- **Tableau Public**: data connection, calculated fields (LOD expressions, Z-score outlier detection), map, stacked area chart, bar chart with reference line, scatter plot, dashboard with a single cross-chart parameter control (replacing per-worksheet filter actions)
