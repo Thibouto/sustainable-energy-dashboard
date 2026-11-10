@@ -1,6 +1,6 @@
 # Global Sustainable Energy Dashboard (2000-2019)
 
-Interactive dashboard on global sustainable energy indicators (electricity access, energy mix, renewable share, CO2 emissions) across 176 countries, built from a dataset spanning 2000-2020 (the dashboard's own year control tops out at 2019, see Known limitations). This is a portfolio project built as part of a transition into data analytics, focused on data visualization rather than data cleaning (see the other portfolio projects for that).
+Interactive dashboard on global sustainable energy indicators (electricity access, energy mix, renewable share, CO2 emissions) across 176 countries, built from a dataset spanning 2000-2020 (the dashboard's own year control tops out at 2019, see Known limitations). This portfolio project focuses on data visualization rather than data cleaning (see the other portfolio projects for that).
 
 **[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/thibaut.r4710/viz/sustainable_energy_dashboard/Dashboard1)**
 
@@ -13,7 +13,7 @@ A short screen recording of the dashboard in use is available here: [images/Reco
 A single **Year Control** parameter (2000-2019) drives one slider that syncs the selected year across all four views at once.
 
 - **Electricity Access Around the World**: world map of electricity access (% of population) by country
-- **Global Electricity Mix**: fossil / nuclear / renewable electricity generation (TWh) stacked over time, with the selected year highlighted and other years greyed out
+- **Global Electricity Mix**: fossil / nuclear / renewable electricity generation (TWh) stacked over the full 2000-2020 period, so the selected year can be read in its long-term context
 - **Renewable Share Growth Since 2000: Top 10 Countries**: countries with the largest gain in renewable energy share between 2000 and the selected year, benchmarked against the world average
 - **CO2 Emissions vs GDP per Capita**: CO2 emissions per capita against GDP per capita for the selected year, one point per country, with statistical outliers (more than 2 standard deviations from the year's average on either axis) labeled directly on the chart
 
@@ -45,7 +45,7 @@ Also fixed: the `Density (P/Km2)` column header contained a literal line break i
 - **`Renewable Share Selected Year`**: same idea, but for whichever year `Year Control` is set to, so the comparison updates live with the slider instead of being fixed to one year
 - **`Renewable Share Change`**: a `{FIXED [Entity] : MAX(...)}` LOD expression comparing `Renewable Share 2000` to `Renewable Share Selected Year` on a single row, regardless of the active filter
 - **`World AVG renew share change`**: a table-wide `{FIXED : AVG(...)}` LOD expression, used as a reference line so the Top 10 chart can be benchmarked against the true world average rather than the average of the 10 countries shown
-- **`Is Selected Year` / `Show Selected Year` / `Grey Mask`**: highlight the year picked by `Year Control` on the map and the electricity mix chart, greying out the other years
+- **`Show Selected Year`**: `[Year] = [Year Control]`, used as a filter so the map and the CO2 vs GDP scatter plot show only the year picked on the slider
 - **`CO2 Z-Score` / `GDP Z-Score`**: `({FIXED [Year] : ...} - mean) / stddev` for CO2 per capita and GDP per capita, computed per year so a country's outlier status is relative to that year's distribution, not the whole 2000-2020 range
 - **`Outlier Label`**: returns the country name when `|CO2 Z-Score| > 2` or `|GDP Z-Score| > 2`, used as a text label on the scatter plot
 - **`Population (estimated)`**: `Density × Land Area`, used to derive a per-capita view (see limitation below)
